@@ -65,9 +65,7 @@ CREATE PROCEDURE add_working_days(IN start VARCHAR(12), IN end VARCHAR(12))
      SET work_start = (SELECT ADDTIME((SELECT DATE_ADD(start_day, INTERVAL i DAY)), '20:00:00'));
      SET work_end = (SELECT ADDTIME((SELECT DATE_ADD(start_day, INTERVAL (i+1) DAY)), '08:00:00'));
 
-     IF (work_end < cursor_DATE_END) THEN
      INSERT INTO table_b(NAME, DATE_BEGIN, DATE_END) VALUES(cursor_NAME, work_start, work_end);
-     END IF;
 
      SET i = i+1;
      END IF;
@@ -76,9 +74,7 @@ CREATE PROCEDURE add_working_days(IN start VARCHAR(12), IN end VARCHAR(12))
      THEN
      SET work_start = (SELECT ADDTIME((SELECT DATE_ADD(start_day, INTERVAL i DAY)), '08:00:00'));
      SET work_end = (SELECT ADDTIME((SELECT DATE_ADD(start_day, INTERVAL i DAY)), '20:00:00'));
-     IF (work_end < cursor_DATE_END) THEN
      INSERT INTO table_b(NAME, DATE_BEGIN, DATE_END) VALUES(cursor_NAME, work_start, work_end);
-     END IF;
      SET day_val_next = (SELECT substring(cursor_SCHEDULE, (index_schedule %CHAR_LENGTH(cursor_SCHEDULE))+2, 1));
      IF (day_val_next <> 'н') THEN SET i = i + 1; END IF;
      END IF;
@@ -87,9 +83,7 @@ CREATE PROCEDURE add_working_days(IN start VARCHAR(12), IN end VARCHAR(12))
      THEN
      SET work_start = (SELECT ADDTIME((SELECT DATE_ADD(start_day, INTERVAL i DAY)), '08:00:00'));
      SET work_end = (SELECT ADDTIME((SELECT DATE_ADD(start_day, INTERVAL i+1 DAY)), '08:00:00'));
-     IF (work_end < cursor_DATE_END) THEN
      INSERT INTO T_CONTRACTOR_WORK_DAY(NAME, DATE_BEGIN, DATE_END) VALUES(cursor_NAME, work_start, work_end);
-     END IF;
      SET i = i+1;
      END IF;
      IF (day_val ='в')
